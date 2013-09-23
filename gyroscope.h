@@ -1,11 +1,16 @@
 #ifndef __GYROSCOPE_H__
 #define __GYROSCOPE_H__
 
+#include "vec.h"
 #include <Arduino.h>
+
 class Gyroscope
 {
   public:
     Gyroscope();
+    void initialize();
+
+    Vec3i get_angular_velocity() const;
 
   private:
     const byte WHO_AM_I;      
@@ -37,7 +42,9 @@ class Gyroscope
     const byte INT1_THS_YL;   
     const byte INT1_THS_ZH;   
     const byte INT1_THS_ZL;   
-    const byte INT1_DURATION; 
+    const byte INT1_DURATION;
+
+    const byte DEVICE;
 };
 
 #endif

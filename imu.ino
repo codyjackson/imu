@@ -3,7 +3,6 @@
 #include "vec.h"
 #include <Wire.h>
 
-Accelerometer accelerometer;
 Gyroscope gyroscope;
 
 void setup()
@@ -11,12 +10,12 @@ void setup()
   Wire.begin();
   Serial.begin(9600);
   
-  accelerometer.initialize();
+  gyroscope.initialize();
 }
 
 void loop()
 {
-  Vec3i v = accelerometer.get_acceleration();
+  Vec3i v = gyroscope.get_angular_velocity();
   Serial.print("\nx: ");
   Serial.print(v.x());
   Serial.print(" y: ");

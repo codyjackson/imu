@@ -1,15 +1,15 @@
-#include "i2c_helper.h"
+#include "i2c.h"
 
 #include <Wire.h>
 
-void i2c_helper::write_to_register(byte deviceAddress, byte registerAddress, byte val) {
+void I2C::write_to_register(byte deviceAddress, byte registerAddress, byte val) {
   Wire.beginTransmission(deviceAddress);  
   Wire.write(registerAddress);
   Wire.write(val);
   Wire.endTransmission();
 }
 
-void i2c_helper::read_from_register(byte deviceAddress, byte registerAddress, int numOfBytes, byte buff[]) {
+void I2C::read_from_register(byte deviceAddress, byte registerAddress, int numOfBytes, byte buff[]) {
   Wire.beginTransmission(deviceAddress);
   Wire.write(registerAddress);
   Wire.endTransmission();

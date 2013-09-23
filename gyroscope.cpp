@@ -1,5 +1,5 @@
 #include "gyroscope.h"
-#include "i2c_helper.h"
+#include "i2c.h"
 #include <Wire.h>
 
 Gyroscope::Gyroscope()
@@ -16,30 +16,18 @@ Gyroscope::Gyroscope()
 
 void Gyroscope::initialize()
 {
-	i2c_helper::write_to_register(DEVICE, CTRL_REG1, 0x0F);
+	I2C::write_to_register(DEVICE, CTRL_REG1, 0x0F);
 }
 
 Vec3i Gyroscope::get_angular_velocity() const
 {
-	Wire.beginTransmission(DEVICE);
-	// assert the MSB of the address to get the gyro 
-	// to do slave-transmit subaddress updating.
-	Wire.write(OUT_X_L | (1 << 7)); 
-	Wire.endTransmission();
-	Wire.requestFrom((int)DEVICE, 6);
-
-	while (Wire.available() < 6);
-
-	uint8_t xla = Wire.read();
-	uint8_t xha = Wire.read();
-	uint8_t yla = Wire.read();
-	uint8_t yha = Wire.read();
-	uint8_t zla = Wire.read();
-	uint8_t zha = Wire.read();
-
-	short x = xha << 8 | xla;
-	short y = yha << 8 | yla;
-	short z = zha << 8 | zla;
+	const int bytesPerAxis = 2;
+	const int totalNumOfBytes = bytesPerAxis * 3; 
+	byte buffer[totalNumOfBytes];
+	I2C::read_from_register(DEVICE, OUT_X_L | (1 << 7), totalNumOfBytes, buffer);
+	const short x = (((short)buffer[1]) << 8) | buffer[0];   
+	const short y = (((short)buffer[3]) << 8) | buffer[2];
+	const short z = (((short)buffer[5]) << 8) | buffer[4];
 
 	return Vec3i(x, y, z);
 }

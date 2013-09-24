@@ -10,9 +10,16 @@ class Gyroscope
     Gyroscope();
     void initialize();
 
-    Vec3i get_angular_velocity() const;
+    const Vec3 get_current_angle(float timeStepInSeconds) const;
+    const Vec3 get_angular_velocity() const;
 
   private:
+    const Vec3 get_raw_angular_velocity() const;
+    const Vec3 get_average_reading(int numOfSamples) const;
+
+    mutable Vec3 _currentAngle;
+    Vec3 _offset;
+
     const byte WHO_AM_I;      
 
     const byte CTRL_REG1;     

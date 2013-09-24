@@ -15,12 +15,8 @@ void setup()
 
 void loop()
 {
-  Vec3i v = gyroscope.get_angular_velocity();
-  Serial.print("\nx: ");
-  Serial.print(v.x());
-  Serial.print(" y: ");
-  Serial.print(v.y());
-  Serial.print(" z: ");
+  Vec3 v = gyroscope.get_current_angle(0.01f);
+  Serial.print("\nz: ");
   Serial.print(v.z());
-  delay(50);
+  delay(10);
 }

@@ -3,7 +3,8 @@
 #include <Wire.h>
 
 Gyroscope::Gyroscope()
-   :WHO_AM_I(0x0F),      CTRL_REG1(0x20),    CTRL_REG2(0x21), 
+   :_lastAngleTimestamp(0),
+   WHO_AM_I(0x0F),      CTRL_REG1(0x20),    CTRL_REG2(0x21), 
    CTRL_REG3(0x22),     CTRL_REG4(0x23),    CTRL_REG5(0x24), 
    REFERENCE(0x25),     OUT_TEMP(0x26),     STATUS_REG(0x27), 
    OUT_X_L(0x28),       OUT_X_H(0x29),      OUT_Y_L(0x2A), 
@@ -17,7 +18,7 @@ Gyroscope::Gyroscope()
 void Gyroscope::initialize()
 {
 	I2C::write_to_register(DEVICE, CTRL_REG1, 0x0F);
-	I2C::write_to_register(DEVICE, CTRL_REG4, 0x30);
+	I2C::write_to_register(DEVICE, CTRL_REG4, 0x90);
 	_offset = get_average_reading(10)*(-1.0f);
 }
 
@@ -37,9 +38,15 @@ const Vec3 Gyroscope::get_angular_velocity() const
 	return get_raw_angular_velocity()+_offset;
 }
 
-const Vec3 Gyroscope::get_current_angle(float timeStepInSeconds) const
+const Vec3 Gyroscope::get_current_angle() const
 {
-	return _currentAngle += get_angular_velocity()*timeStepInSeconds;
+	Vec3 v = get_angular_velocity();
+	unsigned long newTimeStamp = millis();
+	
+	float dt = _lastAngleTimestamp == 0 ? 0 : (newTimeStamp - _lastAngleTimestamp)/1000.0f;
+	_lastAngleTimestamp = newTimeStamp;
+
+	return _currentAngle += get_angular_velocity()*dt;
 }
 
 const Vec3 Gyroscope::get_raw_angular_velocity() const
@@ -55,6 +62,6 @@ const Vec3 Gyroscope::get_raw_angular_velocity() const
 	//The gyroscope reports in mili degrees per second. I'm converting to degrees per second.
 	//http://electronics.stackexchange.com/questions/39024/how-do-i-get-gyro-sensor-data-l3g4200d-into-degrees-sec
 	Vec3 v(x, y, z);
-	v*=(1.0f/14.286f);
+	v*=0.0175;
 	return v;
 }

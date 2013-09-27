@@ -11,7 +11,7 @@ class Accelerometer
     Accelerometer();
     void initialize();
 
-    const Vec3 get_acceleration() const;
+    Vec3 get_angles() const;
     
   private:
     const byte POWER_CTL;

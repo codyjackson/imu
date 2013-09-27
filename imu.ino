@@ -1,22 +1,23 @@
-#include "accelerometer.h"
-#include "gyroscope.h"
+#include "imu.h"
 #include "vec.h"
 #include <Wire.h>
 
-Gyroscope gyroscope;
+Imu imu;
 
 void setup()
 {
   Wire.begin();
   Serial.begin(9600);
-  
-  gyroscope.initialize();
+  imu.initialize();
 }
 
 void loop()
 {
-  Vec3 v = gyroscope.get_current_angle();
-  Serial.print(v.z());
-  Serial.print('\n');
+  Vec3 a = imu.get_orientation();
+  Serial.print(a.x());
+  Serial.print(" ");
+  Serial.print(a.y());
+  Serial.print("\n");
+
   delay(10);
 }

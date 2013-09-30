@@ -11,18 +11,21 @@ Magnetometer::Magnetometer()
 
 void Magnetometer::initialize()
 {
+	//Continuous-Measurement Mode
+	I2C::write_to_register(DEVICE, MODE, 0x0);
 	//Select highest output rate.
 	I2C::write_to_register(DEVICE, CONFIGURATION_A, 0x6<<2);
-	I2C::write_to_register(DEVICE, MODE, 0x0);
 }
 
 float Magnetometer::get_angle() const
 {
 	byte buffer[6];
 	I2C::read_from_register(DEVICE, OUT, 6, buffer);
-	const float x = (((short)buffer[1]) << 8) | buffer[0];   
-	const float y = (((short)buffer[3]) << 8) | buffer[2];
-	const float z = (((short)buffer[5]) << 8) | buffer[4];
-	return atan2(x, y)*57.2957795;
+	const float x = (((short)buffer[0]) << 8) | buffer[1];   
+	const float z = (((short)buffer[2]) << 8) | buffer[3];
+	const float y = (((short)buffer[4]) << 8) | buffer[5];
+
+	const float heading = atan2(y, x)*57.2957795;
+	return heading >= 0 ? heading : heading + 360.0f;
 }
 

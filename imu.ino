@@ -1,22 +1,22 @@
 #include "imu.h"
 #include "vec.h"
+#include "magnetometer.h"
 #include <Wire.h>
 
 Imu imu;
+Magnetometer magnetometer;
 
 void setup()
 {
   Wire.begin();
   Serial.begin(9600);
-  imu.initialize();
+  magnetometer.initialize();
 }
 
 void loop()
 {
-  Vec3 a = imu.get_orientation();
-  Serial.print(a.x());
-  Serial.print(" ");
-  Serial.print(a.y());
+  float a = magnetometer.get_angle();
+  Serial.print(a);
   Serial.print("\n");
 
   delay(10);

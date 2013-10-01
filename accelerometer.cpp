@@ -3,13 +3,22 @@
 #include "vec.h"
 #include <Arduino.h>
 #include <math.h>
+#include <wire.h>
+
+namespace
+{
+  const byte POWER_CTL(0x2D);
+  const byte DATA_FORMAT(0x31);
+  const byte DATAX0(0x32);
+  const byte DEVICE(0x53);
+}
 
 Accelerometer::Accelerometer()
-  :POWER_CTL(0x2D), DATA_FORMAT(0x31), DATAX0(0x32), DEVICE(0x53)
 {}
 
 void Accelerometer::initialize()
 {
+  Wire.begin();
   I2C::write_to_register(DEVICE, DATA_FORMAT, 0x0B);
   I2C::write_to_register(DEVICE, POWER_CTL, 0x08);
 

@@ -2,16 +2,46 @@
 #include "i2c.h"
 #include <Wire.h>
 
+namespace
+{
+	const byte WHO_AM_I(0x0F);
+	const byte CTRL_REG1(0x20);
+	const byte CTRL_REG2(0x21);
+
+	const byte CTRL_REG3(0x22);
+	const byte CTRL_REG4(0x23);
+	const byte CTRL_REG5(0x24);
+
+	const byte REFERENCE(0x25);
+	const byte OUT_TEMP(0x26);
+	const byte STATUS_REG(0x27);
+
+	const byte OUT_X_L(0x28);
+	const byte OUT_X_H(0x29);
+	const byte OUT_Y_L(0x2A);
+
+	const byte OUT_Y_H(0x2B);
+	const byte OUT_Z_L(0x2C);
+	const byte OUT_Z_H(0x2D);
+
+	const byte FIFO_CTRL_REG(0x2E);
+	const byte FIFO_SRC_REG(0x2F);
+	const byte INT1_CFG(0x30);
+
+	const byte INT1_SRC(0x31);
+	const byte INT1_THS_XH(0x32);
+	const byte INT1_THS_XL(0x33);
+
+	const byte INT1_THS_YH(0x34);
+	const byte INT1_THS_YL(0x35);
+	const byte INT1_THS_ZH(0x36);
+
+	const byte INT1_THS_ZL(0x37);
+	const byte INT1_DURATION(0x38);
+	const byte DEVICE(0xD2 >> 1);
+}
+
 Gyroscope::Gyroscope()
-   :WHO_AM_I(0x0F),      CTRL_REG1(0x20),    CTRL_REG2(0x21), 
-   CTRL_REG3(0x22),     CTRL_REG4(0x23),    CTRL_REG5(0x24), 
-   REFERENCE(0x25),     OUT_TEMP(0x26),     STATUS_REG(0x27), 
-   OUT_X_L(0x28),       OUT_X_H(0x29),      OUT_Y_L(0x2A), 
-   OUT_Y_H(0x2B),       OUT_Z_L(0x2C),      OUT_Z_H(0x2D), 
-   FIFO_CTRL_REG(0x2E), FIFO_SRC_REG(0x2F), INT1_CFG(0x30),      
-   INT1_SRC(0x31),      INT1_THS_XH(0x32),  INT1_THS_XL(0x33),   
-   INT1_THS_YH(0x34),   INT1_THS_YL(0x35),  INT1_THS_ZH(0x36),   
-   INT1_THS_ZL(0x37),   INT1_DURATION(0x38), DEVICE(0xD2 >> 1)
 {}
 
 void Gyroscope::initialize()
